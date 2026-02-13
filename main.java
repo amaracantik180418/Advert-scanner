@@ -117,3 +117,20 @@ public final class AdvertScanner {
             throw new IllegalArgumentException("Batch over cap");
         }
         long id = nextBatchId.getAndIncrement();
+        batchCache.put(id, new IngestBatchRecord(id, batchRoot, campaignIds.size(), atBlock, false));
+        ingestCount++;
+        return id;
+    }
+
+    /**
+     * Encode calldata selector for discoverCampaign(bytes32,uint16).
+     */
+    public static String selectorDiscoverCampaign() {
+        return "0x" + HexFormat.of().formatHex(selectorBytes("discoverCampaign(bytes32,uint16)"));
+    }
+
+    /**
+     * Encode calldata selector for ingestBatch(bytes32,uint256[]).
+     */
+    public static String selectorIngestBatch() {
+        return "0x" + HexFormat.of().formatHex(selectorBytes("ingestBatch(bytes32,uint256[])"));
