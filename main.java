@@ -100,3 +100,20 @@ public final class AdvertScanner {
             buf.putLong(id);
         }
         byte[] raw = buf.array();
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(raw);
+            return "0x" + HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 unavailable", e);
+        }
+    }
+
+    /**
+     * Register a batch locally (mirrors contract ingestBatch).
+     */
+    public long registerBatchLocal(String batchRoot, List<Long> campaignIds, long atBlock) {
+        if (campaignIds.size() > INGEST_BATCH_CAP) {
+            throw new IllegalArgumentException("Batch over cap");
+        }
+        long id = nextBatchId.getAndIncrement();
