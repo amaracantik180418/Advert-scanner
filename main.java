@@ -66,3 +66,20 @@ public final class AdvertScanner {
         String key = sourceHashKey(sourceHash);
         if (campaignCache.containsKey(key)) return;
         long id = nextCampaignId.getAndIncrement();
+        campaignCache.put(key, new CampaignRecord(id, sourceHash, categoryId, atBlock, Instant.now(), false));
+        lastCrawlBlockByCategory.put(categoryId, atBlock);
+        crawlCount++;
+    }
+
+    /**
+     * Build 32-byte source hash for contract (keccak256(sourcePayload)).
+     * Uses SHA-256 here as stand-in; in production use Web3j/keccak.
+     */
+    public String sourceHashHex(byte[] sourcePayload) {
+        if (sourcePayload == null || sourcePayload.length < MIN_SOURCE_BYTES) {
+            throw new IllegalArgumentException("Source payload too short");
+        }
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(sourcePayload);
+            return "0x" + HexFormat.of().formatHex(digest);
