@@ -49,3 +49,20 @@ public final class AdvertScanner {
     public long getNextCrawlBlockForCategory(int categoryId) {
         Long last = lastCrawlBlockByCategory.get(categoryId);
         if (last == null) return genesisBlock;
+        return last + CRAWL_WINDOW_BLOCKS;
+    }
+
+    /**
+     * Whether the current block allows a crawl for the given category.
+     */
+    public boolean canCrawlCategory(int categoryId, long currentBlock) {
+        return currentBlock >= getNextCrawlBlockForCategory(categoryId);
+    }
+
+    /**
+     * Record a campaign discovery locally (mirrors contract discoverCampaign).
+     */
+    public void discoverCampaignLocal(byte[] sourceHash, int categoryId, long atBlock) {
+        String key = sourceHashKey(sourceHash);
+        if (campaignCache.containsKey(key)) return;
+        long id = nextCampaignId.getAndIncrement();
