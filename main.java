@@ -83,3 +83,20 @@ public final class AdvertScanner {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] digest = md.digest(sourcePayload);
             return "0x" + HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 unavailable", e);
+        }
+    }
+
+    /**
+     * Build batch root from list of campaign ids (keccak256 of ordered ids).
+     */
+    public String batchRootHex(long[] campaignIds) {
+        if (campaignIds == null || campaignIds.length == 0 || campaignIds.length > INGEST_BATCH_CAP) {
+            throw new IllegalArgumentException("Invalid campaign id list for batch");
+        }
+        ByteBuffer buf = ByteBuffer.allocate(campaignIds.length * Long.BYTES);
+        for (long id : campaignIds) {
+            buf.putLong(id);
+        }
+        byte[] raw = buf.array();
