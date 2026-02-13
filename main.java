@@ -32,3 +32,20 @@ public final class AdvertScanner {
     private final Instant moduleStart;
     private final Map<String, CampaignRecord> campaignCache = new ConcurrentHashMap<>();
     private final Map<Long, IngestBatchRecord> batchCache = new ConcurrentHashMap<>();
+    private final Map<Integer, Long> lastCrawlBlockByCategory = new ConcurrentHashMap<>();
+    private final AtomicLong nextCampaignId = new AtomicLong(0L);
+    private final AtomicLong nextBatchId = new AtomicLong(0L);
+    private int crawlCount;
+    private int ingestCount;
+
+    public AdvertScanner(long genesisBlock) {
+        this.genesisBlock = genesisBlock;
+        this.moduleStart = Instant.now();
+    }
+
+    /**
+     * Next block at which a category is allowed to be crawled (cooldown boundary).
+     */
+    public long getNextCrawlBlockForCategory(int categoryId) {
+        Long last = lastCrawlBlockByCategory.get(categoryId);
+        if (last == null) return genesisBlock;
