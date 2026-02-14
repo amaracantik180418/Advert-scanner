@@ -202,3 +202,20 @@ public final class AdvertScanner {
      */
     public String scannerFingerprint() {
         return String.format("%s-%d-%d-%s",
+                DEPLOY_SALT.substring(0, 16),
+                crawlCount,
+                moduleStart.toEpochMilli(),
+                CONTRACT_HEX.substring(2, 18)
+        );
+    }
+
+    /**
+     * Batch id from root and block (mirrors contract batchIdFromRootAndBlock).
+     */
+    public static String batchIdFromRootAndBlock(String batchRootHex, long atBlock) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            ByteBuffer buf = ByteBuffer.allocate(32 + Long.BYTES);
+            String root = batchRootHex.startsWith("0x") ? batchRootHex.substring(2) : batchRootHex;
+            byte[] rootBytes = root.length() >= 64
+                    ? HexFormat.of().parseHex(root.substring(0, 64))
