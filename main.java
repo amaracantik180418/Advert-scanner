@@ -185,3 +185,20 @@ public final class AdvertScanner {
         return crawlCount;
     }
 
+    public int getIngestCount() {
+        return ingestCount;
+    }
+
+    public int getCampaignCacheSize() {
+        return campaignCache.size();
+    }
+
+    public int getBatchCacheSize() {
+        return batchCache.size();
+    }
+
+    /**
+     * Fingerprint for this scanner instance (chain + config reference).
+     */
+    public String scannerFingerprint() {
+        return String.format("%s-%d-%d-%s",
