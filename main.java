@@ -151,3 +151,20 @@ public final class AdvertScanner {
     }
 
     /**
+     * Encode calldata selector for getScannerConfig().
+     */
+    public static String selectorGetScannerConfig() {
+        return "0x" + HexFormat.of().formatHex(selectorBytes("getScannerConfig()"));
+    }
+
+    private static byte[] selectorBytes(String signature) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(signature.getBytes(StandardCharsets.UTF_8));
+            byte[] first4 = new byte[4];
+            System.arraycopy(hash, 0, first4, 0, 4);
+            return first4;
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 unavailable", e);
+        }
+    }
