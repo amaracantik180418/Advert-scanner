@@ -270,3 +270,20 @@ public final class AdvertScanner {
             this.batchRoot = batchRoot;
             this.campaignCount = campaignCount;
             this.submittedAtBlock = submittedAtBlock;
+            this.sealed = sealed;
+        }
+    }
+
+    public static void main(String[] args) {
+        long genesis = 28_391_847_502L;
+        AdvertScanner scanner = new AdvertScanner(genesis);
+        byte[] payload = "https://example.com/campaign/abc123".getBytes(StandardCharsets.UTF_8);
+        System.out.println("Source hash: " + scanner.sourceHashHex(payload));
+        scanner.discoverCampaignLocal(payload, 3, genesis + 100);
+        System.out.println("Next crawl block category 3: " + scanner.getNextCrawlBlockForCategory(3));
+        long[] ids = { 0L, 1L, 2L };
+        System.out.println("Batch root: " + scanner.batchRootHex(ids));
+        System.out.println("Selector discoverCampaign: " + selectorDiscoverCampaign());
+        System.out.println("Fingerprint: " + scanner.scannerFingerprint());
+    }
+}
