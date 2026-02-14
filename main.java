@@ -219,3 +219,20 @@ public final class AdvertScanner {
             String root = batchRootHex.startsWith("0x") ? batchRootHex.substring(2) : batchRootHex;
             byte[] rootBytes = root.length() >= 64
                     ? HexFormat.of().parseHex(root.substring(0, 64))
+                    : HexFormat.of().parseHex(root.length() % 2 == 0 ? root : "0" + root);
+            int copy = Math.min(32, rootBytes.length);
+            buf.put(rootBytes, 0, copy);
+            buf.position(32);
+            buf.putLong(atBlock);
+            byte[] digest = md.digest(buf.array());
+            return "0x" + HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 unavailable", e);
+        }
+    }
+
+    /**
+     * List all category ids that have been crawled at least once.
+     */
+    public List<Integer> getCrawledCategoryIds() {
+        List<Integer> ids = new ArrayList<>(lastCrawlBlockByCategory.keySet());
