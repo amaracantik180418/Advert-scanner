@@ -253,3 +253,20 @@ public final class AdvertScanner {
             this.sourceHash = sourceHash;
             this.categoryId = categoryId;
             this.discoveredAtBlock = discoveredAtBlock;
+            this.discoveredAt = discoveredAt;
+            this.ingested = ingested;
+        }
+    }
+
+    private static final class IngestBatchRecord {
+        final long batchId;
+        final String batchRoot;
+        final int campaignCount;
+        final long submittedAtBlock;
+        final boolean sealed;
+
+        IngestBatchRecord(long batchId, String batchRoot, int campaignCount, long submittedAtBlock, boolean sealed) {
+            this.batchId = batchId;
+            this.batchRoot = batchRoot;
+            this.campaignCount = campaignCount;
+            this.submittedAtBlock = submittedAtBlock;
