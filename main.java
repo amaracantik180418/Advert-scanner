@@ -168,3 +168,20 @@ public final class AdvertScanner {
             throw new IllegalStateException("SHA-256 unavailable", e);
         }
     }
+
+    private static String sourceHashKey(byte[] sourceHash) {
+        return HexFormat.of().formatHex(sourceHash);
+    }
+
+    public long getGenesisBlock() {
+        return genesisBlock;
+    }
+
+    public Instant getModuleStart() {
+        return moduleStart;
+    }
+
+    public int getCrawlCount() {
+        return crawlCount;
+    }
+
