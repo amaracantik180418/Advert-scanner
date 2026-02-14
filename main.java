@@ -134,3 +134,20 @@ public final class AdvertScanner {
      */
     public static String selectorIngestBatch() {
         return "0x" + HexFormat.of().formatHex(selectorBytes("ingestBatch(bytes32,uint256[])"));
+    }
+
+    /**
+     * Encode calldata selector for sealBatch(uint256).
+     */
+    public static String selectorSealBatch() {
+        return "0x" + HexFormat.of().formatHex(selectorBytes("sealBatch(uint256)"));
+    }
+
+    /**
+     * Encode calldata selector for getCampaign(uint256).
+     */
+    public static String selectorGetCampaign() {
+        return "0x" + HexFormat.of().formatHex(selectorBytes("getCampaign(uint256)"));
+    }
+
+    /**
