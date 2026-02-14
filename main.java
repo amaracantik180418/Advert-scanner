@@ -236,3 +236,20 @@ public final class AdvertScanner {
      */
     public List<Integer> getCrawledCategoryIds() {
         List<Integer> ids = new ArrayList<>(lastCrawlBlockByCategory.keySet());
+        Collections.sort(ids);
+        return ids;
+    }
+
+    private static final class CampaignRecord {
+        final long campaignId;
+        final byte[] sourceHash;
+        final int categoryId;
+        final long discoveredAtBlock;
+        final Instant discoveredAt;
+        final boolean ingested;
+
+        CampaignRecord(long campaignId, byte[] sourceHash, int categoryId, long discoveredAtBlock, Instant discoveredAt, boolean ingested) {
+            this.campaignId = campaignId;
+            this.sourceHash = sourceHash;
+            this.categoryId = categoryId;
+            this.discoveredAtBlock = discoveredAtBlock;
